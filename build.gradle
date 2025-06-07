@@ -1,4 +1,4 @@
-lsplugins {
+plugins {
     id 'java'
 }
 
@@ -12,6 +12,11 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'io.rest-assured:rest-assured:5.5.5'
+    testImplementation 'io.rest-assured:json-path:5.5.5'
+    testImplementation 'io.rest-assured:json-schema-validator:5.5.5'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+
 }
 
 test {
