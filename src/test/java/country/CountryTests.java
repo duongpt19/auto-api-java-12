@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.Response;
+import model.Country;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,9 +51,9 @@ public class CountryTests {
                 .header("Content-Type",equalTo("application/json; charset=utf-8"));
         //3. Verify Body
         ObjectMapper mapper = new ObjectMapper();
-        List<Map<String, String>> expected = mapper.readValue(CountriesData.ALL_COUNTRIES_DATE, new TypeReference<List<Map<String, String>>>(){
+        List<Country> expected = mapper.readValue(CountriesData.ALL_COUNTRIES_DATE, new TypeReference<List<Country>>(){
         });
-        List<Map<String, String>> actual = response.body().as(new TypeRef<List<Map<String, String>>>(){
+        List<Country> actual = response.body().as(new TypeRef<List<Country>>(){
         });
         assertThat(actual.size(), equalTo(expected.size()));
         assertThat(actual.containsAll(expected), equalTo(true));
@@ -69,27 +70,27 @@ public class CountryTests {
                 .assertThat().body(matchesJsonSchemaInClasspath("json-schema/country-schema.json"));
     }
 
-    static Stream<Map<String, String>> countryProvider() throws JsonProcessingException {
+    static Stream<Country> countryProvider() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        List<Map<String, String>> inputData = mapper.readValue(CountriesData.ALL_COUNTRIES_DATE, new TypeReference<List<Map<String, String>>>(){
+        List<Country> inputData = mapper.readValue(CountriesData.ALL_COUNTRIES_DATE, new TypeReference<>(){
         });
         return inputData.stream();
     }
 
     @ParameterizedTest
     @MethodSource("countryProvider")
-    void verifyGetCountry(Map<String, String> input) throws JsonProcessingException {
+    void verifyGetCountry(Country input) {
         Response response = RestAssured.given().log().all()
-                .get("/api/v1/countries/{code}", input.get("code"));
+                .get("/api/v1/countries/{code}", input.getCode());
         //1. Verify status
         response.then().log().all().statusCode(200);
         //2. Verify Headers
         response.then().header("X-Powered-By",equalTo("Express"))
                 .header("Content-Type",equalTo("application/json; charset=utf-8"));
         //3. Verify Body
-        Map<String, String> actual=response.body().as(new TypeRef<Map<String, String>>() {
-        });
+        Country actual=response.body().as(Country.class);
         assertThat(actual, equalToObject(input));
     }
+
 
 }
