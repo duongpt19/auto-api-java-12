@@ -1,4 +1,4 @@
-package model;
+package model.country;
 
 import java.util.List;
 import java.util.Objects;
