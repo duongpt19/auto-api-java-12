@@ -210,6 +210,18 @@ public class CountryTests {
                 .queryParam(SIZE, size)
                 .get(GET_COUNTRY_WITH_PAGINATION_API);
     }
+
+    @Test
+    void verifySchemaOfGetCountryApiWithHeader(){
+        RestAssured.given().log().all()
+                .header(API_KEY_HEADER, API_KEY_HEADER_VALUE)
+                .get(GET_COUNTRY_WITH_FILTER_HEADER_API)
+                .then()
+                .log().all()
+                .statusCode(200)
+                .assertThat().body(matchesJsonSchemaInClasspath("json-schema/country-header-schema.json"));
+    }
+
 }
 
 
