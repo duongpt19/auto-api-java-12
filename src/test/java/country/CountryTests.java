@@ -7,30 +7,34 @@ import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.Response;
 import model.Country;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-
 public class CountryTests {
     private static final String GET_COUNTRIES_API = "/api/v1/countries";
     private static final String GET_COUNTRY_API = "/api/v1/countries/{code}";
     private static final String GET_COUNTRY_WITH_FILTER_API = "/api/v3/countries";
+    private static final String GET_COUNTRY_WITH_FILTER_HEADER_API = "/api/v5/countries";
     private static final String X_POWERED_BY_HEADER = "X-Powered-By";
     private static final String X_POWERED_BY_HEADER_VALUE = "Express";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
     private static final String CONTENT_TYPE_HEADER_VALUE = "application/json; charset=utf-8";
+    private static final String API_KEY_HEADER = "api-key";
+    private static final String API_KEY_HEADER_VALUE = "private";
     private static final String GDP_FILTER = "gdp";
     private static final String OPERATOR_FILTER = "operator";
+
 
     @BeforeAll
     static void setup(){
@@ -113,26 +117,39 @@ public class CountryTests {
                 .assertThat().body(matchesJsonSchemaInClasspath("json-schema/country-with-filter-schema.json"));
     }
 
-    @Test
-    void verifyGetCountryWithFilterGreaterThan(){
+    static Stream<Arguments> getCountryWithFilterProvider(){
+        return Stream.of(
+                Arguments.of(">", 5000, greaterThan(100f)),
+                        Arguments.of(">=", 5000, greaterThanOrEqualTo(100f)),
+                        Arguments.of("<", 5000, lessThan(5000f)),
+                        Arguments.of("<=", 5000, lessThanOrEqualTo(5000f)),
+                        Arguments.of("==", 5000, equalTo(5000f))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("getCountryWithFilterProvider")
+    void verifyGetCountryWithFilter(String operator, int gdp, Matcher expected) {
         Response response = RestAssured.given().log().all()
-                .queryParam(GDP_FILTER, 100)
-                .queryParam(OPERATOR_FILTER, ">")
+                .queryParam(GDP_FILTER, gdp)
+                .queryParam(OPERATOR_FILTER, operator)
                 .get(GET_COUNTRY_WITH_FILTER_API);
         //1. Verify status
         response.then().log().all().statusCode(200);
         //2. Verify Headers
-        response.then().header(X_POWERED_BY_HEADER ,equalTo(X_POWERED_BY_HEADER_VALUE))
-                .header(CONTENT_TYPE_HEADER,equalTo(CONTENT_TYPE_HEADER_VALUE));
+        response.then().header(X_POWERED_BY_HEADER, equalTo(X_POWERED_BY_HEADER_VALUE))
+                .header(CONTENT_TYPE_HEADER, equalTo(CONTENT_TYPE_HEADER_VALUE));
         //3. Verify Body
-        List <Country> actual=response.body().as(new TypeRef<>(){
+        List<Country> actual = response.body().as(new TypeRef<>() {
         });
-        for (Country country: actual){
-            assertThat(country.getGdp(), greaterThan(100f));
+        for (Country country : actual) {
+            assertThat(country.getGdp(), expected);
         }
     }
-    //Buổi 5 làm lại sau
-
-    //Buổi 6 nhé
 
 }
+
+
+
+
+
