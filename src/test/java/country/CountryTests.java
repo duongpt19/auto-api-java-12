@@ -21,30 +21,14 @@ import java.util.stream.Stream;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static utils.ConstantUtils.*;
 
 public class CountryTests {
-    private static final String GET_COUNTRIES_API = "/api/v1/countries";
-    private static final String GET_COUNTRY_API = "/api/v1/countries/{code}";
-    private static final String GET_COUNTRY_WITH_FILTER_API = "/api/v3/countries";
-    private static final String GET_COUNTRY_WITH_PAGINATION_API = "/api/v4/countries";
-    private static final String GET_COUNTRY_WITH_FILTER_HEADER_API = "/api/v5/countries";
-    private static final String X_POWERED_BY_HEADER = "X-Powered-By";
-    private static final String X_POWERED_BY_HEADER_VALUE = "Express";
-    private static final String CONTENT_TYPE_HEADER = "Content-Type";
-    private static final String CONTENT_TYPE_HEADER_VALUE = "application/json; charset=utf-8";
-    private static final String API_KEY_HEADER = "api-key";
-    private static final String API_KEY_HEADER_VALUE = "private";
-    private static final String GDP_FILTER = "gdp";
-    private static final String OPERATOR_FILTER = "operator";
-    private static final String PAGE = "page";
-    private static final String SIZE = "size";
-
 
     @BeforeAll
     static void setup(){
-        //http://localhost:3000/api/v1/countries
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.port = 3000;
+        RestAssured.baseURI = HOST;
+        RestAssured.port = PORT;
     }
 
     @Test

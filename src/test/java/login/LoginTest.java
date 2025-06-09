@@ -17,20 +17,14 @@ import java.util.stream.Stream;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static utils.ConstantUtils.*;
 
 public class LoginTest {
-    private static final String LOGIN_API= "/api/login";
-    private static final String X_POWERED_BY_HEADER = "X-Powered-By";
-    private static final String X_POWERED_BY_HEADER_VALUE = "Express";
-    private static final String CONTENT_TYPE_HEADER = "Content-Type";
-    private static final String RESPONSE_CONTENT_TYPE_HEADER_VALUE = "application/json; charset=utf-8";
-    private static final String REQUEST_CONTENT_TYPE_HEADER_VALUE = "application/json";
-
 
     @BeforeAll
     static void setup(){
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.port = 3000;
+        RestAssured.baseURI = HOST;
+        RestAssured.port = PORT;
     }
 
     @Test
