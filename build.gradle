@@ -16,6 +16,8 @@ dependencies {
     testImplementation 'io.rest-assured:json-path:5.5.5'
     testImplementation 'io.rest-assured:json-schema-validator:5.5.5'
     testImplementation 'org.hamcrest:hamcrest:2.2'
+    testCompileOnly("org.projectlombok:lombok:1.18.38")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
 
 }
 

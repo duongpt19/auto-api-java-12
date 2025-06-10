@@ -1,44 +1,20 @@
 package model.country;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Objects;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Country {
     private String name;
     private String code;
     private float gdp;
-
-    public Country(){
-    }
-
-    public Country(String name, String code, float gdp) {
-        this.name = name;
-        this.code = code;
-        this.gdp = gdp;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public float getGdp() {
-        return gdp;
-    }
-
-    public void setGdp(float gdp) {
-        this.gdp = gdp;
-    }
 
     @Override
     public boolean equals(Object o) {
