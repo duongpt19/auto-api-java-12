@@ -18,6 +18,9 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testCompileOnly("org.projectlombok:lombok:1.18.38")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
+    testImplementation("net.javacrumbs.json-unit:json-unit:4.1.1")
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
 
 }
 
